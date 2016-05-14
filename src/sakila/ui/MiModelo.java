@@ -5,6 +5,7 @@
  */
 package sakila.ui;
 
+import java.util.Date;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 
@@ -36,6 +37,8 @@ public class MiModelo extends DefaultTableModel
    public Class getColumnClass(int columna)
    {
       if (columna == 3) return Boolean.class;
-      return Object.class;
+      if (columna == 4) return Date.class;
+      return String.class;
+      
    }
 }

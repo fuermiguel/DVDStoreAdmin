@@ -1,60 +1,92 @@
-
 package sakila.ui;
 
+import java.awt.Color;
 import static java.awt.Color.yellow;
 import java.awt.Component;
 import java.awt.Font;
-import javax.swing.JCheckBox;
+import java.util.Date;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
- 
+
 /**
  *
  * @author Rolando
  */
 public class TablaRenderizador extends JLabel implements TableCellRenderer {
 
-   
-    protected int column;
+   // protected int column;
 
-   
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         MiModelo model = (MiModelo) table.getModel();
-        this.column=column;
-        JCheckBox j=new JCheckBox();
-
+      
         //La tabla espera un componente, no importa si le envio this(JLabel) u otro
-        //Si devuelvo el jlabel podría meter iconos (ver comentarios del final)
-        if (value instanceof String)
-        {
-         Font f = new Font( "Helvetica",Font.ITALIC,12 );
-         setFont(f);
-         setBackground(getBackground());
-         setText(" "+model.getValueAt(row,column).toString());
-         setOpaque(true);//para que una etiqueta haga caso del color de fondo
-         setBackground(yellow);//amarillo
+        //Si devuelvo el jlabel podría meter iconos 
+        if (value instanceof String) {
+            Font f = new Font("Helvetica", Font.ITALIC, 12);
+            setFont(f);
+            setBackground(getBackground());
+            setText(" " + model.getValueAt(row, column).toString());
+            setOpaque(true);//para que una etiqueta haga caso del color de fondo
+             if (row % 2 == 0) {
+            setBackground(new Color(255, 255, 200));
+        } else {
+            setBackground(Color.white);
+        }
 
-         return this;
+            return this;
         }
-        if (model.getValueAt(row,column).getClass().equals(Boolean.class))
-        {
-          //j.setOpaque(true);
-          j.setBackground(yellow);//amarillo
-        j.setSelected(Boolean.parseBoolean(model.getValueAt(row,column).toString()));
-          j.setHorizontalAlignment(SwingConstants.CENTER);
-          //j.setAlignmentX(j.CENTER_ALIGNMENT);
-          return j;
+        
+         if (value instanceof Boolean) {
+            Font f = new Font("Helvetica", Font.ITALIC, 12);
+            setFont(f);
+            setBackground(getBackground());
+            setText(" " + model.getValueAt(row, column));
+            setOpaque(true);//para que una etiqueta haga caso del color de fondo
+            setBackground(yellow);//amarillo
+
+            return this;
         }
+        
+         if (value instanceof Date) {
+            Font f = new Font("Helvetica", Font.ITALIC, 12);
+            setFont(f);
+            setBackground(getBackground());
+           // setText(" " + (Date) model.getValueAt(row, column));
+            setOpaque(true);//para que una etiqueta haga caso del color de fondo
+            setBackground(yellow);//amarillo
+
+            return this;
+        }
+        
+        
+        
+        /*
+        if (model.getValueAt(row, column).getClass().equals(Boolean.class)) {
+            //j.setOpaque(true);
+            j.setBackground(yellow);//amarillo
+            j.setSelected(Boolean.parseBoolean(model.getValueAt(row, column).toString()));
+            j.setHorizontalAlignment(SwingConstants.CENTER);
+            //j.setAlignmentX(j.CENTER_ALIGNMENT);
+            return j;
+        }
+        if (model.getValueAt(row, column).getClass().equals(java.util.Date.class)) {
+            Font f = new Font("Helvetica", Font.ITALIC, 12);
+            setFont(f);
+            setBackground(getBackground());
+            setText(" " + (Date) model.getValueAt(row, column));
+            setOpaque(true);//para que una etiqueta haga caso del color de fondo
+            setBackground(yellow);//amarillo
+        }*/
         return this;
     }
 
-   
 }
 
-
-/*******Otro modelo de redenrizador***********/
+/**
+ * *****Otro modelo de redenrizador**********
+ */
 
 /*package com.blogspot.rolandopalermo.gui;
  
@@ -68,7 +100,7 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author Rolando
  */
-/*
+ /*
 public class TablaRenderizadorCliente implements TableCellRenderer {
  
     @Override
