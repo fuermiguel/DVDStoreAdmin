@@ -78,6 +78,7 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
 
             }
         ));
+        tbl_customer.getTableHeader().setReorderingAllowed(false);
         jsp_tabla.setViewportView(tbl_customer);
 
         chk_activo.setText("Activo");
@@ -132,15 +133,15 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
 
     private void btn_queryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_queryActionPerformed
         if (!txt_nombre.getText().trim().equals("")) {
-                 runQueryBasedOnFirstName();
-                 return;
+            runQueryBasedOnFirstName();
+            return;
         }
         if (!txt_apellido.getText().trim().equals("")) {
             runQueryBasedOnLastName();
             return;
         }
-            runQueryBasedOnActive();
-        
+        runQueryBasedOnActive();
+
     }//GEN-LAST:event_btn_queryActionPerformed
 
     private void displayResult(List resultList) {
@@ -162,7 +163,12 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
             oneRow.add(customer.getLastUpdate());
             tableData.add(oneRow);
         }
+
         tbl_customer.setModel(new MiModelo(tableData, tableHeaders));
+        //Hay que renderizar para el tipo de cada columna
+        tbl_customer.setDefaultRenderer(Object.class, new TablaRenderizador());
+        tbl_customer.setDefaultRenderer(Boolean.class, new TablaRenderizador());
+        
     }
 
     private void executeHQLQuery(String hql) {
@@ -175,11 +181,13 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
             displayResult(resultList);
             session.getTransaction().commit();
         } catch (HibernateException he) {
-            if ((session != null) & (session.getTransaction().isActive())){
+            if ((session != null) & (session.getTransaction().isActive())) {
                 session.getTransaction().rollback();
             }
-        }finally{
-             if ((session != null)) session.close();
+        } finally {
+            if ((session != null)) {
+                session.close();
+            }
         }
     }
 
@@ -195,7 +203,7 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
         int myInt = (chk_activo.isSelected()) ? 1 : 0;
         executeHQLQuery(QUERY_BASED_ON_ACTIVE + myInt + "'");
     }
- 
+
     /**
      * @param args the command line arguments
      */
