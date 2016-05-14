@@ -17,13 +17,14 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.shaper.StandardButtonShaper;
-import sakila.entity.Actor;
+import sakila.entity.Customer;
 import sakila.util.HibernateUtil;
 
 public class DVDStoreAdmin extends javax.swing.JFrame {
 
-    private static String QUERY_BASED_ON_FIRST_NAME = "from Actor a where a.firstName like '";
-    private static String QUERY_BASED_ON_LAST_NAME = "from Actor a where a.lastName like '";
+    private static String QUERY_BASED_ON_FIRST_NAME = "from customer a where a.nombre like '";
+    private static String QUERY_BASED_ON_LAST_NAME = "from customer a where a.apellido like '";
+    private static String QUERY_BASED_ON_ACTIVE = "from customer a where a.active = '";
 
     /**
      * Creates new form DVDStoreAdmin
@@ -43,23 +44,24 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
     private void initComponents() {
 
         lbl_titulo = new javax.swing.JLabel();
-        lbl_firstName = new javax.swing.JLabel();
-        lbl_lastName = new javax.swing.JLabel();
-        txt_firstName = new javax.swing.JTextField();
-        txt_lastName = new javax.swing.JTextField();
+        lbl_nombre = new javax.swing.JLabel();
+        lbl_apellido = new javax.swing.JLabel();
+        txt_nombre = new javax.swing.JTextField();
+        txt_apellido = new javax.swing.JTextField();
         btn_query = new javax.swing.JButton();
         jsp_tabla = new javax.swing.JScrollPane();
-        tbl_actor = new javax.swing.JTable();
+        tbl_customer = new javax.swing.JTable();
+        chk_activo = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         lbl_titulo.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        lbl_titulo.setText("Actor Profile");
+        lbl_titulo.setText("Customer Profile");
 
-        lbl_firstName.setText("First Name:");
+        lbl_nombre.setText("Nombre:");
 
-        lbl_lastName.setText("Last Name:");
+        lbl_apellido.setText("Apellido:");
 
         btn_query.setText("Query");
         btn_query.addActionListener(new java.awt.event.ActionListener() {
@@ -68,55 +70,61 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
             }
         });
 
-        tbl_actor.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_customer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5"
             }
         ));
-        jsp_tabla.setViewportView(tbl_actor);
+        jsp_tabla.setViewportView(tbl_customer);
+
+        chk_activo.setText("Activo");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(167, Short.MAX_VALUE)
-                .addComponent(lbl_titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(178, 178, 178))
             .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jsp_tabla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbl_firstName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txt_firstName, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_lastName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_lastName, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addComponent(btn_query, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(35, 35, 35)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jsp_tabla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbl_nombre)
+                                .addGap(2, 2, 2)
+                                .addComponent(txt_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbl_apellido)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txt_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(chk_activo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btn_query, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(168, 168, 168)
+                        .addComponent(lbl_titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(24, 24, 24)
                 .addComponent(lbl_titulo)
-                .addGap(31, 31, 31)
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_firstName)
-                    .addComponent(txt_firstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_lastName)
-                    .addComponent(txt_lastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_query))
+                    .addComponent(lbl_nombre)
+                    .addComponent(txt_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_apellido)
+                    .addComponent(txt_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_query)
+                    .addComponent(chk_activo))
                 .addGap(18, 18, 18)
                 .addComponent(jsp_tabla, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(29, Short.MAX_VALUE))
@@ -126,31 +134,35 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_queryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_queryActionPerformed
-        if (!txt_firstName.getText().trim().equals("")) {
+        if (!txt_nombre.getText().trim().equals("")) {
             runQueryBasedOnFirstName();
-        } else if (!txt_lastName.getText().trim().equals("")) {
+        } else if (!txt_apellido.getText().trim().equals("")) {
             runQueryBasedOnLastName();
+        } else {
+            runQueryBasedOnActive();
         }
     }//GEN-LAST:event_btn_queryActionPerformed
 
     private void displayResult(List resultList) {
         Vector<String> tableHeaders = new Vector<String>();
         Vector tableData = new Vector();
-        tableHeaders.add("ActorId");
-        tableHeaders.add("FirstName");
-        tableHeaders.add("LastName");
-        tableHeaders.add("LastUpdated");
+        tableHeaders.add("Nombre");
+        tableHeaders.add("Apellidos");
+        tableHeaders.add("Email");
+        tableHeaders.add("Activo");
+        tableHeaders.add("Última Actualización");
 
         for (Object o : resultList) {
-            Actor actor = (Actor) o;
+            Customer customer = (Customer) o;
             Vector<Object> oneRow = new Vector<Object>();
-            oneRow.add(actor.getActorId());
-            oneRow.add(actor.getFirstName());
-            oneRow.add(actor.getLastName());
-            oneRow.add(actor.getLastUpdate());
+            oneRow.add(customer.getFirstName());
+            oneRow.add(customer.getLastName());
+            oneRow.add(customer.getEmail());
+            oneRow.add(customer.isActive());
+            oneRow.add(customer.getLastUpdate());
             tableData.add(oneRow);
         }
-        tbl_actor.setModel(new DefaultTableModel(tableData, tableHeaders));
+        tbl_customer.setModel(new DefaultTableModel(tableData, tableHeaders));
     }
 
     private void executeHQLQuery(String hql) {
@@ -167,11 +179,15 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
     }
 
     private void runQueryBasedOnFirstName() {
-        executeHQLQuery(QUERY_BASED_ON_FIRST_NAME + txt_firstName.getText() + "%'");
+        executeHQLQuery(QUERY_BASED_ON_FIRST_NAME + txt_nombre.getText() + "%'");
     }
 
     private void runQueryBasedOnLastName() {
-        executeHQLQuery(QUERY_BASED_ON_LAST_NAME + txt_lastName.getText() + "%'");
+        executeHQLQuery(QUERY_BASED_ON_LAST_NAME + txt_apellido.getText() + "%'");
+    }
+
+    private void runQueryBasedOnActive() {
+        executeHQLQuery(QUERY_BASED_ON_ACTIVE + chk_activo.isSelected() + "'");
     }
 
     /**
@@ -211,12 +227,13 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_query;
+    private javax.swing.JCheckBox chk_activo;
     private javax.swing.JScrollPane jsp_tabla;
-    private javax.swing.JLabel lbl_firstName;
-    private javax.swing.JLabel lbl_lastName;
+    private javax.swing.JLabel lbl_apellido;
+    private javax.swing.JLabel lbl_nombre;
     private javax.swing.JLabel lbl_titulo;
-    private javax.swing.JTable tbl_actor;
-    private javax.swing.JTextField txt_firstName;
-    private javax.swing.JTextField txt_lastName;
+    private javax.swing.JTable tbl_customer;
+    private javax.swing.JTextField txt_apellido;
+    private javax.swing.JTextField txt_nombre;
     // End of variables declaration//GEN-END:variables
 }
