@@ -162,7 +162,7 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
             oneRow.add(customer.getLastUpdate());
             tableData.add(oneRow);
         }
-        tbl_customer.setModel(new DefaultTableModel(tableData, tableHeaders));
+        tbl_customer.setModel(new MiModelo(tableData, tableHeaders));
     }
 
     private void executeHQLQuery(String hql) {
@@ -175,9 +175,11 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
             displayResult(resultList);
             session.getTransaction().commit();
         } catch (HibernateException he) {
-            he.printStackTrace();
+            if ((session != null) & (session.getTransaction().isActive())){
+                session.getTransaction().rollback();
+            }
         }finally{
-            session.close();
+             if ((session != null)) session.close();
         }
     }
 
