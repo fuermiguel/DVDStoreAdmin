@@ -22,8 +22,8 @@ import sakila.util.HibernateUtil;
 
 public class DVDStoreAdmin extends javax.swing.JFrame {
 
-    private static String QUERY_BASED_ON_FIRST_NAME = "from customer a where a.nombre like '";
-    private static String QUERY_BASED_ON_LAST_NAME = "from customer a where a.apellido like '";
+    private static String QUERY_BASED_ON_FIRST_NAME = "from customer a where a.first_name like '";
+    private static String QUERY_BASED_ON_LAST_NAME = "from customer a where a.last_name like '";
     private static String QUERY_BASED_ON_ACTIVE = "from customer a where a.active = '";
 
     /**
