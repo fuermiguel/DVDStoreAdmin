@@ -22,9 +22,9 @@ import sakila.util.HibernateUtil;
 
 public class DVDStoreAdmin extends javax.swing.JFrame {
 
-    private static String QUERY_BASED_ON_FIRST_NAME = "from customer a where a.first_name like '";
-    private static String QUERY_BASED_ON_LAST_NAME = "from customer a where a.last_name like '";
-    private static String QUERY_BASED_ON_ACTIVE = "from customer a where a.active = '";
+    private static String QUERY_BASED_ON_FIRST_NAME = "from Customer a where a.firstName like '";
+    private static String QUERY_BASED_ON_LAST_NAME = "from Customer a where a.lastName like '";
+    private static String QUERY_BASED_ON_ACTIVE = "from Customer a where a.active = '";
 
     /**
      * Creates new form DVDStoreAdmin
@@ -72,13 +72,10 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
 
         tbl_customer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5"
+
             }
         ));
         jsp_tabla.setViewportView(tbl_customer);
@@ -135,12 +132,15 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
 
     private void btn_queryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_queryActionPerformed
         if (!txt_nombre.getText().trim().equals("")) {
-            runQueryBasedOnFirstName();
-        } else if (!txt_apellido.getText().trim().equals("")) {
-            runQueryBasedOnLastName();
-        } else {
-            runQueryBasedOnActive();
+                 runQueryBasedOnFirstName();
+                 return;
         }
+        if (!txt_apellido.getText().trim().equals("")) {
+            runQueryBasedOnLastName();
+            return;
+        }
+            runQueryBasedOnActive();
+        
     }//GEN-LAST:event_btn_queryActionPerformed
 
     private void displayResult(List resultList) {
@@ -166,8 +166,9 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
     }
 
     private void executeHQLQuery(String hql) {
+        Session session = null;
         try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
+            session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
             Query q = session.createQuery(hql);
             List resultList = q.list();
@@ -175,6 +176,8 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
             session.getTransaction().commit();
         } catch (HibernateException he) {
             he.printStackTrace();
+        }finally{
+            session.close();
         }
     }
 
@@ -187,9 +190,10 @@ public class DVDStoreAdmin extends javax.swing.JFrame {
     }
 
     private void runQueryBasedOnActive() {
-        executeHQLQuery(QUERY_BASED_ON_ACTIVE + chk_activo.isSelected() + "'");
+        int myInt = (chk_activo.isSelected()) ? 1 : 0;
+        executeHQLQuery(QUERY_BASED_ON_ACTIVE + myInt + "'");
     }
-
+ 
     /**
      * @param args the command line arguments
      */
